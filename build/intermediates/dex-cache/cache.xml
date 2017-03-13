@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/sweets/Desktop/ 安卓/bluechat/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="6253d9dba23435dc803a8f3fb9a1f1a6792ace16">
+        <dex dex="/Users/sweets/Desktop/ 安卓/bluechat/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_ee4af4b50055875a890268a42a6f2c39203869c1/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/sweets/Desktop/ 安卓/bluechat/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="5cdc052425e77a60e424a354179d0e67ec02799f">
+        <dex dex="/Users/sweets/Desktop/ 安卓/bluechat/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_de563397c51254760f624cc562f1dc4236301604/classes.dex" />
+    </item>
+
+</items>

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/sweets/Desktop/ 安卓/bluechat/app/src/main/assets"/><source path="/Users/sweets/Desktop/ 安卓/bluechat/app/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/Users/sweets/Desktop/ 安卓/bluechat/app/src/debug/assets"/></dataSet></merger>

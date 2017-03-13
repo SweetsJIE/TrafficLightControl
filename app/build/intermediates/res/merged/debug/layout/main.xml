@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent" android:layout_height="fill_parent"
+android:orientation="vertical">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_alignParentTop="true"
+		android:layout_toRightOf="@+id/linearLayout"
+		android:orientation="vertical">
+
+		<Button
+			android:id="@+id/btclose"
+			android:layout_width="131dp"
+			android:layout_height="37dp"
+			android:onClick="onBlueToothclose"
+			android:text="关闭蓝牙" />
+
+		<LinearLayout
+			android:id="@+id/linearLayout"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+			<Button
+				android:id="@+id/button_break"
+				android:layout_width="79dp"
+				android:layout_height="wrap_content"
+				android:onClick="onMyButtonClick"
+				android:text="@string/button_break" />
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+			<EditText
+				android:id="@+id/edit_text_out"
+				android:layout_width="160dp"
+				android:layout_height="64dp"
+				android:ellipsize="end"
+				android:inputType="textMultiLine">
+
+				<requestFocus />
+			</EditText>
+
+			<Button
+				android:id="@+id/button_send"
+				android:layout_width="63dp"
+				android:layout_height="wrap_content"
+				android:text="@string/send" />
+		</LinearLayout>
+
+	</LinearLayout>
+</ScrollView>
