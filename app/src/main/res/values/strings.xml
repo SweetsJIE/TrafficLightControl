@@ -15,22 +15,22 @@
 -->
 
 <resources>
-    <string name="app_name">交通灯控制端By Sweets</string>
+    <string name="app_name">Traffic Light Control Terminal</string>
 
     <!--  BluetoothChat -->
     <string name="send">发送</string>
     <string name="not_connected">你没有连接到一个设备</string>
     <string name="bt_not_enabled_leaving">蓝牙未启用。程序退出</string>
-    <string name="title_connecting">正在连接...</string>
+    <string name="title_connecting">Connecting...</string>
     <string name="title_connected_to">已连接: </string>
-    <string name="title_not_connected">未连接</string>
+    <string name="title_not_connected">Disconnect</string>
     <string name="button_clean">清屏</string>
-    <string name="button_break">连接</string>
+    <string name="button_break">Connected</string>
     <string name="checkBox_sixteen">十六进制显示</string>
     <string name="radioMale">十六进制输出</string>
     <string name="checkBox_line_feed">换行输出</string>
     <string name="button_cleantwo">清除输入框</string>
-    <string name="duankai">断开</string>
+    <string name="duankai">Disconnect</string>
     <string name="prompt_message">没有数据可供查看</string>
 
     <!--  DeviceListActivity -->

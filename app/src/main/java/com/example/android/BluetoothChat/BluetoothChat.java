@@ -18,24 +18,18 @@ package com.example.android.BluetoothChat;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -77,8 +71,14 @@ public class BluetoothChat extends Activity {
 
 	// 布局控件
 	private TextView mTitle;
-	private EditText mOutEditText;
-	private Button mSendButton;
+	private EditText redInputText;
+	private EditText greenInputText;
+	private EditText yellowInputText;
+	private Button redSendButton;
+	private Button greenSendButton;
+	private Button yellowSendButton;
+	private Button urgencyStartButton;
+	private Button urgencyStopButton;
 	private Button breakButton;
 	private Button mButton_close;
 
@@ -172,22 +172,22 @@ public class BluetoothChat extends Activity {
 				mBluetoothAdapter.disable();
 				Toast.makeText(this, "关闭蓝牙", LENGTH_LONG)
 						.show();
-				mButton_close.setText("开启蓝牙");
+				mButton_close.setText("Open Bluetooth");
 
 			} else {
 				Toast.makeText(this, "开启蓝牙", LENGTH_LONG)
 						.show();
 				mBluetoothAdapter.enable();
-				mButton_close.setText("关闭蓝牙");
+				mButton_close.setText("Close Bluetooth");
 			}
 		}
 
 	}
 
-	// 连接按键响应函数
+	// 连接按键响应函数(蓝牙连接服务)
 	public void onConnectButtonClicked(View v) {
 
-		if (breakButton.getText().equals("连接")||breakButton.getText().equals("connect")) {
+		if (breakButton.getText().equals("Connected")) {
 			Intent serverIntent = new Intent(this, DeviceListActivity.class); // 跳转程序设置
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE); // 设置返回宏定义
 			breakButton.setText(R.string.duankai);
@@ -211,11 +211,10 @@ public class BluetoothChat extends Activity {
 		if (D)
 			Log.e(TAG, "+ ON RESUME +");
 
-		// 执行此检查onresume()涵盖的案件中，英国电信
+		// 执行此检查onresume()涵盖的案件中
 		// 不可在onstart()，所以我们停下来让它…
 		// onresume()将被调用时，action_request_enable活动返回。
 		if (mChatService != null) {
-			// 只有国家是state_none，我们知道，我们还没有开始
 			if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
 				// 启动蓝牙聊天服务
 				mChatService.start();
@@ -227,32 +226,44 @@ public class BluetoothChat extends Activity {
 	private void setupChat() {
 		Log.d(TAG, "setupChat()");
 		// 初始化撰写与听众的返回键
-		mOutEditText = (EditText) findViewById(R.id.edit_text_out);
-		mOutEditText.setOnEditorActionListener(mWriteListener);
+		redInputText = (EditText) findViewById(R.id.red);
+		greenInputText = (EditText) findViewById(R.id.green);
+		yellowInputText = (EditText) findViewById(R.id.yellow);
 
 		// 初始化发送按钮，单击事件侦听器
-		mSendButton = (Button) findViewById(R.id.button_send);
-		mSendButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				// 发送消息使用内容的文本编辑控件
-				TextView view = (TextView) findViewById(R.id.edit_text_out);
-				String message = view.getText().toString();
+		redSendButton = (Button) findViewById(R.id.redSend);
+		greenSendButton = (Button) findViewById(R.id.greenSend);
+		yellowSendButton = (Button) findViewById(R.id.yellowSend);
+		urgencyStartButton = (Button) findViewById(R.id.urgencystart);
+		urgencyStopButton = (Button) findViewById(R.id.urgencystop);
+		//公用同一监听器
+		redSendButton.setOnClickListener(new ButtonListener());
+		greenSendButton.setOnClickListener(new ButtonListener());
+		yellowSendButton.setOnClickListener(new ButtonListener());
+		urgencyStartButton.setOnClickListener(new ButtonListener());
+		urgencyStopButton.setOnClickListener(new ButtonListener());
 
-				try {
-					message.getBytes("ISO_8859_1");
-					if (message.length() > 0) {
-						// 得到消息字节和告诉bluetoothchatservice写
-						byte[] send = message.getBytes();
-						mChatService.write(send);
-
-					}
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}   
-
-			}
-		});
+//		redSendButton.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				// 发送消息使用内容的文本编辑控件
+//				TextView view = (TextView) findViewById(R.id.red);
+//				String message = view.getText().toString();
+//
+//				try {
+//					message.getBytes("ISO_8859_1");
+//					if (message.length() > 0) {
+//						// 得到消息字节和告诉bluetoothchatservice写
+//						byte[] send = message.getBytes();
+//						mChatService.write(send);
+//
+//					}
+//				} catch (UnsupportedEncodingException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//
+//			}
+//		});
 
 		// 初始化bluetoothchatservice执行蓝牙连接
 		mChatService = new BluetoothChatService(this, mHandler);
@@ -261,23 +272,53 @@ public class BluetoothChat extends Activity {
 		mOutStringBuffer = new StringBuffer("");
 	}
 
+	private class ButtonListener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			// 发送消息使用内容的文本编辑控件
+			String message = null;
+			switch (v.getId()) {
+
+				case R.id.redSend:
+					message = "red"+redInputText.getText().toString();
+					break;
+				case R.id.greenSend:
+					message = "green"+greenInputText.getText().toString();
+					break;
+				case R.id.yellowSend:
+					message = "yellow"+yellowInputText.getText().toString();
+					break;
+				case R.id.urgencystart:
+					message = "urgencystart";
+					break;
+				case R.id.urgencystop:
+					message = "urgencystop";
+					break;
+				default:
+					break;
+			}
+
+			try {
+					message.getBytes("ISO_8859_1");    //转换编码，类似ascii编码
+					if (message.length() > 0) {
+						// 得到消息字节和告诉bluetoothchatservice写
+						byte[] send = message.getBytes();
+						mChatService.write(send);
+					}
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
+
 	public void onMyButtonClick(View view) {
-//		if (view.getId() == R.id.button_clean) {
-//			mInputEditText.setText("");
-//			fmsg="";
-//			sum =0;
-//		}
+
 		if (view.getId() == R.id.button_break) {
 
 			onConnectButtonClicked(breakButton);
 		}
-//			String Data =mInputEditText.getText().toString();
-//			if (Data.length()>0) {
-//				Intent intent = new Intent();
-//			intent.putExtra(BluetoothData,Data);
-//			intent.setClass(BluetoothChat.this, FullScreen.class);
-//			startActivity(intent);
-
 
 	}
 	@Override
@@ -322,7 +363,7 @@ public class BluetoothChat extends Activity {
 	 * 发送一个消息
 	 * 
 	 * @param message
-	 *            一个文本字符串发送.
+	 * 一个文本字符串发送.
 	 */
 	private void sendMessage(String message) {
 		// 检查我们实际上在任何连接
@@ -337,52 +378,8 @@ public class BluetoothChat extends Activity {
 			// 得到消息字节和告诉bluetoothchatservice写
 			byte[] send = message.getBytes();
 			mChatService.write(send);
-			// 重置字符串缓冲区零和清晰的文本编辑字段
-			//mOutEditText.setText(mOutStringBuffer);
-			//mOutEditText2.setText(mOutStringBuffer);
-
 		}
-		// }else if(message.length()<=0){
-		// Toast.makeText(BluetoothChat.this, "连接已断开",
-		// Toast.LENGTH_LONG).show();
-		// // 用户未启用蓝牙或发生错误
-		// mChatService = new BluetoothChatService(this, mHandler);
-		// Intent serverIntent = new Intent(BluetoothChat.this,
-		// DeviceListActivity.class);
-		// startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-		// }
 	}
-
-	// 行动的倾听者的编辑框控件，听回车键
-	private TextView.OnEditorActionListener mWriteListener = new TextView.OnEditorActionListener() {
-		public boolean onEditorAction(TextView view, int actionId,
-				KeyEvent event) {
-
-			// 如果行动是一个关键行动事件的返回键，发送消息
-			if (actionId == EditorInfo.IME_NULL
-					&& event.getAction() == KeyEvent.ACTION_UP) {
-				//if (view.getId() == R.id.edit_text_out2) {
-					String tmp = view.getText().toString();
-					String d;
-					for(int i=0;i<tmp.length();i++){
-						d=tmp.charAt(i)+"";
-						if(i%2!=0){
-							d+=" ";
-						}
-
-							sendMessage("\n"+ d);
-
-					}
-
-
-
-
-			}
-			if (D)
-				Log.i(TAG, "END onEditorAction");
-			return true;
-		}
-	};
 
 	// 处理程序，获取信息的bluetoothchatservice回来
 	private final Handler mHandler = new Handler() {
@@ -408,27 +405,27 @@ public class BluetoothChat extends Activity {
 					break;
 				}
 				break;
-			case MESSAGE_WRITE:
-				byte[] writeBuf = (byte[]) msg.obj;
-				// 构建一个字符串缓冲区
-				String writeMessage = new String(writeBuf);
-				sum=1;
-				UTF=1;
-				mmsg += writeMessage;
-
-				break;
-			case MESSAGE_READ:
-				byte[] readBuf = (byte[]) msg.obj;
-				// 构建一个字符串从有效字节的缓冲区
-				if (sum==1) {
-					fmsg+="\n-->\n";
-					sum++;
-				}else {
-					sum++;
-				}
-				String readMessage = new String(readBuf, 0, msg.arg1);
-
-				break;
+//			case MESSAGE_WRITE:
+//				byte[] writeBuf = (byte[]) msg.obj;
+//				// 构建一个字符串缓冲区
+//				String writeMessage = new String(writeBuf);
+//				sum=1;
+//				UTF=1;
+//				mmsg += writeMessage;
+//
+//				break;
+//			case MESSAGE_READ:
+//				byte[] readBuf = (byte[]) msg.obj;
+//				// 构建一个字符串从有效字节的缓冲区
+//				if (sum==1) {
+//					fmsg+="\n-->\n";
+//					sum++;
+//				}else {
+//					sum++;
+//				}
+//				String readMessage = new String(readBuf, 0, msg.arg1);
+//
+//				break;
 			case MESSAGE_DEVICE_NAME:
 				// 保存该连接装置的名字
 				mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
@@ -503,73 +500,45 @@ public class BluetoothChat extends Activity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.scan:
-			// 用户未启用蓝牙或发生错误
-			Intent serverIntent = new Intent(this, DeviceListActivity.class);
-			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-			return true;
-		case R.id.discoverable:
-			// 确保此设备是发现别人
-			ensureDiscoverable();
-			return true;
-
-		case R.id.setup:
-			new AlertDialog.Builder(this)
-					.setTitle("设置可选参数")
-					.setIcon(android.R.drawable.ic_dialog_info)
-					.setSingleChoiceItems(new String[] { "十六进制", "字符串" }, 0,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-
-									if (dialog.equals("十六进制")) {
-										Log.d(TAG, "十六进制");
-										dialogs = true;
-									} else {
-										dialogs = false;
-										Log.d(TAG, "字符串");
-									}
-									dialog.dismiss();
-								}
-							}).setNegativeButton("取消", null).show();
-			     return true;
-
-		case R.id.clenr:
-			finish();
-			return true;
-		}
-		return false;
-	}
-//	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case R.id.scan:
+//			// 用户未启用蓝牙或发生错误
+//			Intent serverIntent = new Intent(this, DeviceListActivity.class);
+//			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+//			return true;
+//		case R.id.discoverable:
+//			// 确保此设备是发现别人
+//			ensureDiscoverable();
+//			return true;
 //
-//		          if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//		        	  AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
-//		        	   localBuilder.setIcon(R.drawable.logo).setTitle("友情提示...")
-//		        	     .setMessage("你确定要退出吗？");
-//		        	   localBuilder.setPositiveButton("确定",
-//		        	     new DialogInterface.OnClickListener() {
-//		        	      public void onClick(
-//		        	        DialogInterface paramDialogInterface,
-//		        	        int paramInt) {
-//		        	       BluetoothChat.this.finish();
-//		        	      }
-//		        	     });
-//		        	   localBuilder.setNegativeButton("取消",
-//		        	     new DialogInterface.OnClickListener() {
-//		        	      public void onClick(
-//		        	        DialogInterface paramDialogInterface,
-//		        	        int paramInt) {
-//		        	       paramDialogInterface.cancel();
-//		        	      }
-//		        	     }).create();
-//		        	   localBuilder.show();
+//		case R.id.setup:
+//			new AlertDialog.Builder(this)
+//					.setTitle("设置可选参数")
+//					.setIcon(android.R.drawable.ic_dialog_info)
+//					.setSingleChoiceItems(new String[] { "十六进制", "字符串" }, 0,
+//							new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog,
+//										int which) {
 //
-//		          }else if(keyCode == KeyEvent.KEYCODE_MENU) {
-//		             return false;
-//		          }
-//		          return true;
-//		      }
+//									if (dialog.equals("十六进制")) {
+//										Log.d(TAG, "十六进制");
+//										dialogs = true;
+//									} else {
+//										dialogs = false;
+//										Log.d(TAG, "字符串");
+//									}
+//									dialog.dismiss();
+//								}
+//							}).setNegativeButton("取消", null).show();
+//			     return true;
+//
+//		case R.id.clenr:
+//			finish();
+//			return true;
+//		}
+//		return false;
+//	}
+
 }

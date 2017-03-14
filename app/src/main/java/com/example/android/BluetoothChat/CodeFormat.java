@@ -5,8 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import android.R.integer;
-
 public class CodeFormat {
 	
   static String dataOne ;
@@ -26,8 +24,8 @@ public class CodeFormat {
 	//将字节数组中每个字节拆解成2位16进制整数 
 	for(int i=0;i<bytes.length;i++) 
 	{ 
-	sb.append(hexString.charAt((bytes[i]&0xf0)>>4)); 
-	sb.append(hexString.charAt((bytes[i]&0x0f)>>0)+" "); 
+	  sb.append(hexString.charAt((bytes[i]&0xf0)>>4));
+	  sb.append(hexString.charAt((bytes[i]&0x0f)>>0)+" ");
 	} 
 	 
 	  return sb.toString(); 
