@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Users/sweets/Desktop/ 安卓/bluechat/app/build/intermediates/res/merged/debug/drawable/background.jpeg",
+        "source": "/Users/sweets/Desktop/ 安卓/bluechat/app/src/main/res/drawable/background.jpeg"
+    },
+    {
         "merged": "/Users/sweets/Desktop/ 安卓/bluechat/app/build/intermediates/res/merged/debug/drawable/logo.png",
         "source": "/Users/sweets/Desktop/ 安卓/bluechat/app/src/main/res/drawable/logo.png"
     },
