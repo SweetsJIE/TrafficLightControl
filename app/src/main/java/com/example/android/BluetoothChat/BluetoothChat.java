@@ -74,11 +74,13 @@ public class BluetoothChat extends Activity {
 	private EditText redInputText;
 	private EditText greenInputText;
 	private EditText yellowInputText;
+	private EditText timeInputText;
 	private Button redSendButton;
 	private Button greenSendButton;
 	private Button yellowSendButton;
 	private Button urgencyStartButton;
 	private Button urgencyStopButton;
+	private Button timeChangeButton;
 	private Button breakButton;
 	private Button mButton_close;
 
@@ -229,6 +231,8 @@ public class BluetoothChat extends Activity {
 		redInputText = (EditText) findViewById(R.id.red);
 		greenInputText = (EditText) findViewById(R.id.green);
 		yellowInputText = (EditText) findViewById(R.id.yellow);
+		timeInputText = (EditText) findViewById(R.id.timeChange);
+
 
 		// 初始化发送按钮，单击事件侦听器
 		redSendButton = (Button) findViewById(R.id.redSend);
@@ -236,12 +240,14 @@ public class BluetoothChat extends Activity {
 		yellowSendButton = (Button) findViewById(R.id.yellowSend);
 		urgencyStartButton = (Button) findViewById(R.id.urgencystart);
 		urgencyStopButton = (Button) findViewById(R.id.urgencystop);
+		timeChangeButton = (Button) findViewById(R.id.timeChangeSend);
 		//公用同一监听器
 		redSendButton.setOnClickListener(new ButtonListener());
 		greenSendButton.setOnClickListener(new ButtonListener());
 		yellowSendButton.setOnClickListener(new ButtonListener());
 		urgencyStartButton.setOnClickListener(new ButtonListener());
 		urgencyStopButton.setOnClickListener(new ButtonListener());
+		timeChangeButton.setOnClickListener(new ButtonListener());
 
 //		redSendButton.setOnClickListener(new OnClickListener() {
 //			public void onClick(View v) {
@@ -295,6 +301,8 @@ public class BluetoothChat extends Activity {
 				case R.id.urgencystop:
 					message = "urgencystop";
 					break;
+				case R.id.timeChangeSend:
+					message = "timechange"+timeInputText.getText().toString();
 				default:
 					break;
 			}
